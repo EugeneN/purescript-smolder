@@ -5,6 +5,7 @@ module Text.Smolder.Markup
   , parent
   , leaf
   , text
+  , htmlEntity
   , Attribute()
   , Attributable
   , with
@@ -25,6 +26,7 @@ data Attr = Attr String String
 data MarkupM a
   = Element String (Maybe Markup) (Array Attr) (MarkupM a)
   | Content String (MarkupM a)
+  | HtmlEntity String (MarkupM a)
   | Return a 
 
 type Markup = MarkupM Unit
@@ -37,6 +39,9 @@ leaf el = Element el Nothing [] (Return unit)
 
 text :: forall a. String -> Markup
 text s = Content s (Return unit)
+
+htmlEntity :: forall a. String -> Markup
+htmlEntity s = HtmlEntity s (Return unit)
 
 instance semigroupMarkupM :: Semigroup (MarkupM a) where
   append x y = x *> y
