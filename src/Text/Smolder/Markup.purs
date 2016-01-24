@@ -52,6 +52,7 @@ instance monoidMarkup :: Monoid (MarkupM Unit) where
 instance functorMarkupM :: Functor MarkupM where
   map f (Element el kids attrs rest) = Element el kids attrs (map f rest)
   map f (Content s rest) = Content s (map f rest)
+  map f (HtmlEntity s rest) = HtmlEntity s (map f rest)
   map f (Return a) = Return (f a)
 
 instance applyMarkupM :: Apply MarkupM where
@@ -63,6 +64,7 @@ instance applicativeMarkupM :: Applicative MarkupM where
 instance bindMarkupM :: Bind MarkupM where
   bind (Element el kids attrs rest) f = Element el kids attrs (bind rest f)
   bind (Content s rest) f = Content s (bind rest f)
+  bind (HtmlEntity s rest) f = HtmlEntity s (bind rest f)
   bind (Return a) f = f a
 
 instance monadMarkupM :: Monad MarkupM
